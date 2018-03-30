@@ -101,8 +101,9 @@ public slots:
     }
 
     void on_error() {
-        QByteArray err_data =  solution->readAllStandardError();
-        emit error(QString(err_data));
+        QString err_data(solution->readAllStandardError());
+        qDebug().noquote() << err_data;
+        emit error(err_data);
     }
 
 public:
