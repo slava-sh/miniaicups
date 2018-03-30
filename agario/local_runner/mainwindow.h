@@ -71,6 +71,7 @@ public:
         connect(ui->btn_strategies_settings, &QPushButton::clicked, sm, &QDialog::show);
 
         ui->btn_newSeed->setVisible(false);
+        ui->btn_start->animateClick();
     }
 
     ~MainWindow() {
