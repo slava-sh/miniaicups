@@ -16,6 +16,10 @@ protected:
     bool is_running;
     QMetaObject::Connection finish_connection;
 
+    QDebug debug() {
+        return qDebug().noquote();
+    }
+
 signals:
     void error(QString);
 
@@ -54,7 +58,8 @@ public:
             return Direct(0, 0);
         }
         QString message = prepare_state(fragments, objects);
-        qDebug().noquote() << message;
+        debug() << message;
+        message += "\n";
         int sent = solution->write(message.toStdString().c_str());
         if (sent == -1) {
             emit error("Can't write to process");
@@ -68,7 +73,7 @@ public:
                 cmdBytes.append(solution->readAllStandardOutput());
                 cmdBytes.append(solution->readAllStandardError());
                 cmdBytes.append(solution->readAll());
-                qDebug().noquote() << cmdBytes;
+                debug() << cmdBytes;
                 emit error("Can't wait for process answer (limit expired)");
                 return Direct(0, 0);
             }
@@ -102,16 +107,16 @@ public slots:
 
     void on_error() {
         QString err_data(solution->readAllStandardError());
-        qDebug().noquote() << err_data;
+        debug() << err_data;
         emit error(err_data);
     }
 
 public:
     void send_config() {
         QJsonDocument jsonDoc(Constants::instance().toJson());
-        QString message = QString(jsonDoc.toJson(QJsonDocument::Compact)) + "\n";
-
-        qDebug().noquote() << message;
+        QString message = QString(jsonDoc.toJson(QJsonDocument::Compact));
+        debug() << message;
+        message += "\n";
         int sent = solution->write(message.toStdString().c_str());
         if (sent == 0) {
             emit error("Can't write config to process");
@@ -132,7 +137,7 @@ public:
         json.insert("Objects", objectsArray);
 
         QJsonDocument jsonDoc(json);
-        return QString(jsonDoc.toJson(QJsonDocument::Compact)) + "\n";
+        return QString(jsonDoc.toJson(QJsonDocument::Compact));
     }
 
     QJsonObject parse_answer(QByteArray &data) {
