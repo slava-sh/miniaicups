@@ -108,6 +108,7 @@ public:
         }
         if (my_player != nullptr) {
             my_player->debug_message = json.value("Debug").toString();
+            my_player->debug_draw = json.value("Draw").toObject();
         }
 
         return result;

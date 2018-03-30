@@ -3,6 +3,8 @@
 
 #include "circle.h"
 #include "ejection.h"
+#include <QJsonArray>
+#include <QJsonDocument>
 
 
 class Player : public Circle
@@ -11,6 +13,7 @@ public:
     bool is_fast;
     int fuse_timer;
     QString debug_message;
+    QJsonObject debug_draw;
 
 protected:
     double speed, angle;
@@ -108,6 +111,26 @@ public:
             painter.setPen(QPen(QBrush(Qt::red), 1));
             QPair<double, double> norm = get_direct();
             painter.drawLine(ix, iy, norm.first, norm.second);
+        }
+        if (!debug_draw.isEmpty()) {
+            auto lines = debug_draw.value("Lines").toArray();
+            for (auto line : lines) {
+                double prev_x;
+                double prev_y;
+                bool is_first = true;
+                for (auto _point : line.toArray()) {
+                    auto point = _point.toObject();
+                    double x = point.value("X").toDouble();
+                    double y = point.value("Y").toDouble();
+                    if (!is_first) {
+                        painter.setPen(QPen(QBrush(Qt::black), 1));
+                        painter.drawLine(prev_x, prev_y, x, y);
+                    }
+                    prev_x = x;
+                    prev_y = y;
+                    is_first = false;
+                }
+            }
         }
         if (!debug_message.isNull()) {
             painter.setPen(QPen(QBrush(Qt::black), 1));
