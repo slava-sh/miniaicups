@@ -54,7 +54,7 @@ public:
             return Direct(0, 0);
         }
         QString message = prepare_state(fragments, objects);
-        qDebug() << message;
+        qDebug().noquote() << message;
         int sent = solution->write(message.toStdString().c_str());
         if (sent == -1) {
             emit error("Can't write to process");
@@ -68,7 +68,7 @@ public:
                 cmdBytes.append(solution->readAllStandardOutput());
                 cmdBytes.append(solution->readAllStandardError());
                 cmdBytes.append(solution->readAll());
-                qDebug() << cmdBytes;
+                qDebug().noquote() << cmdBytes;
                 emit error("Can't wait for process answer (limit expired)");
                 return Direct(0, 0);
             }
@@ -110,7 +110,7 @@ public:
         QJsonDocument jsonDoc(Constants::instance().toJson());
         QString message = QString(jsonDoc.toJson(QJsonDocument::Compact)) + "\n";
 
-        qDebug() << message;
+        qDebug().noquote() << message;
         int sent = solution->write(message.toStdString().c_str());
         if (sent == 0) {
             emit error("Can't write config to process");
