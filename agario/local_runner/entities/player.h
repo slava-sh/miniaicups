@@ -10,6 +10,7 @@ class Player : public Circle
 public:
     bool is_fast;
     int fuse_timer;
+    QString debug_message;
 
 protected:
     double speed, angle;
@@ -107,6 +108,10 @@ public:
             painter.setPen(QPen(QBrush(Qt::red), 1));
             QPair<double, double> norm = get_direct();
             painter.drawLine(ix, iy, norm.first, norm.second);
+        }
+        if (!debug_message.isNull()) {
+            painter.setPen(QPen(QBrush(Qt::black), 1));
+            painter.drawText(ix, iy - radius - 3, debug_message);
         }
     }
 

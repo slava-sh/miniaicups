@@ -96,6 +96,18 @@ public:
         if (keys.contains("Eject")) {
             result.eject = json.value("Eject").toBool(false);
         }
+
+        Player* my_player = nullptr;
+        for (auto player : fragments) {
+            if (player->getId() == id) {
+                my_player = player;
+                break;
+            }
+        }
+        if (my_player != nullptr) {
+            my_player->debug_message = json.value("Debug").toString();
+        }
+
         return result;
     }
 
