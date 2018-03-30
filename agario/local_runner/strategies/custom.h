@@ -74,7 +74,9 @@ public:
                 cmdBytes.append(solution->readAllStandardError());
                 cmdBytes.append(solution->readAll());
                 debug() << cmdBytes;
-                emit error("Can't wait for process answer (limit expired)");
+                if (is_running) {
+                    emit error("Can't wait for process answer (limit expired)");
+                }
                 return Direct(0, 0);
             }
             cmdBytes.append(solution->readLine());
