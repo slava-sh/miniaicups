@@ -190,12 +190,18 @@
         <property name="text">
          <string>Команды стратегий</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="cbx_fog">
         <property name="text">
          <string>Области видимости</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
