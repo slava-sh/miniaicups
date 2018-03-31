@@ -205,8 +205,6 @@ public slots:
         generator.setSize(QSize(
                     Constants::instance().GAME_WIDTH,
                     Constants::instance().GAME_HEIGHT));
-        generator.setTitle("TITLE");
-        generator.setDescription("DEEEEE");
         QPainter painter;
         painter.begin(&generator);
         paint_on(painter);

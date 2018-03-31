@@ -119,8 +119,8 @@ public:
                 bool is_first = true;
                 for (auto _point : line.toArray()) {
                     auto point = _point.toObject();
-                    double x = point.value("X").toDouble();
-                    double y = point.value("Y").toDouble();
+                    auto x = point.value("X").toDouble();
+                    auto y = point.value("Y").toDouble();
                     if (!is_first) {
                         painter.setPen(QPen(QBrush(Qt::black), 1));
                         painter.drawLine(prev_x, prev_y, x, y);
@@ -132,10 +132,12 @@ public:
             }
             for (auto _circle : debug_draw.value("Circles").toArray()) {
                 auto circle = _circle.toObject();
-                double x = circle.value("X").toDouble();
-                double y = circle.value("Y").toDouble();
-                double r = circle.value("R").toDouble();
-                painter.setBrush(Qt::red);
+                auto x = circle.value("X").toDouble();
+                auto y = circle.value("Y").toDouble();
+                auto r = circle.value("R").toDouble();
+                auto color = circle.value("Color").toString("red");
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(QColor(color));
                 painter.drawEllipse(QPointF(x, y), r, r);
             }
         }
