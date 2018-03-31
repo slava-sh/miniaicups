@@ -63,6 +63,7 @@ public:
         ui->txt_ticks->setText("0");
         connect(ui->btn_start_pause, SIGNAL(pressed()), this, SLOT(init_game()));
         connect(ui->btn_stop, SIGNAL(pressed()), this, SLOT(clear_game()));
+        connect(ui->btn_step, SIGNAL(pressed()), this, SLOT(pause_and_step_game()));
 
         connect(ui->cbx_forces, SIGNAL(stateChanged(int)), this, SLOT(update()));
         connect(ui->cbx_speed, SIGNAL(stateChanged(int)), this, SLOT(update()));
@@ -176,6 +177,24 @@ public slots:
         else ui->btn_start_pause->setText("Пауза");
     }
 
+    void pause_and_step_game() {
+        is_paused = true;
+        step_game();
+    }
+
+    void step_game() {
+        int tick = mechanic->tickEvent();
+        ui->txt_ticks->setText(QString::number(tick));
+        this->update();
+
+        if (tick % Constants::instance().BASE_TICK == 0 && tick != 0) {
+            update_score();
+        }
+        if (tick % Constants::instance().GAME_TICKS == 0 && tick != 0) {
+            finish_game();
+        }
+    }
+
     void finish_game() {
         killTimer(timerId);
         is_paused = false;
@@ -211,16 +230,7 @@ public:
 
     void timerEvent(QTimerEvent *event) {
         if (event->timerId() == timerId && !is_paused) {
-            int tick = mechanic->tickEvent();
-            ui->txt_ticks->setText(QString::number(tick));
-            this->update();
-
-            if (tick % Constants::instance().BASE_TICK == 0 && tick != 0) {
-                update_score();
-            }
-            if (tick % Constants::instance().GAME_TICKS == 0 && tick != 0) {
-                finish_game();
-            }
+            step_game();
         }
     }
 

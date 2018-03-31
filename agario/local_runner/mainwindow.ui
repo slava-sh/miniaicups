@@ -134,6 +134,33 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QPushButton" name="btn_newSeed">
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_step">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Шаг</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_pause">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -304,6 +331,7 @@
   <tabstop>btn_start_pause</tabstop>
   <tabstop>btn_stop</tabstop>
   <tabstop>btn_newSeed</tabstop>
+  <tabstop>btn_step</tabstop>
   <tabstop>cbx_speed</tabstop>
   <tabstop>cbx_forces</tabstop>
   <tabstop>cbx_fog</tabstop>
