@@ -117,7 +117,7 @@ public:
 public slots:
     void on_finished(int code) {
         is_running = false;
-        emit error("Process finished with code " + QString::number(code));
+        //emit error("Process finished with code " + QString::number(code));
     }
 
     void on_error() {
