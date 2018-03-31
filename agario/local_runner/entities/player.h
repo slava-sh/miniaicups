@@ -113,32 +113,34 @@ public:
             painter.drawLine(ix, iy, norm.first, norm.second);
         }
         if (!debug_draw.isEmpty()) {
-            for (auto line : debug_draw.value("Lines").toArray()) {
+            for (auto _circle : debug_draw.value("Circles").toArray()) {
+                auto circle = _circle.toObject();
+                auto x = circle.value("X").toDouble();
+                auto y = circle.value("Y").toDouble();
+                auto r = circle.value("R").toDouble();
+                auto color = circle.value("C").toString("red");
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(QColor(color));
+                painter.drawEllipse(QPointF(x, y), r, r);
+            }
+            for (auto _line : debug_draw.value("Lines").toArray()) {
+                auto line = _line.toObject();
                 double prev_x;
                 double prev_y;
                 bool is_first = true;
-                for (auto _point : line.toArray()) {
+                auto color = line.value("C").toString();
+                for (auto _point : line.value("P").toArray()) {
                     auto point = _point.toObject();
                     auto x = point.value("X").toDouble();
                     auto y = point.value("Y").toDouble();
                     if (!is_first) {
-                        painter.setPen(QPen(QBrush(Qt::black), 1));
+                        painter.setPen(QPen(QBrush(QColor(color)), 1));
                         painter.drawLine(prev_x, prev_y, x, y);
                     }
                     prev_x = x;
                     prev_y = y;
                     is_first = false;
                 }
-            }
-            for (auto _circle : debug_draw.value("Circles").toArray()) {
-                auto circle = _circle.toObject();
-                auto x = circle.value("X").toDouble();
-                auto y = circle.value("Y").toDouble();
-                auto r = circle.value("R").toDouble();
-                auto color = circle.value("Color").toString("red");
-                painter.setPen(Qt::NoPen);
-                painter.setBrush(QColor(color));
-                painter.drawEllipse(QPointF(x, y), r, r);
             }
         }
         if (!debug_message.isNull()) {
