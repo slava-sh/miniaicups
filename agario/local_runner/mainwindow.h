@@ -178,6 +178,7 @@ public slots:
     }
 
     void pause_and_step_game() {
+        init_game();
         is_paused = true;
         step_game();
     }
