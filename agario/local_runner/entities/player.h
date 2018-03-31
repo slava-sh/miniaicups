@@ -113,8 +113,7 @@ public:
             painter.drawLine(ix, iy, norm.first, norm.second);
         }
         if (!debug_draw.isEmpty()) {
-            auto lines = debug_draw.value("Lines").toArray();
-            for (auto line : lines) {
+            for (auto line : debug_draw.value("Lines").toArray()) {
                 double prev_x;
                 double prev_y;
                 bool is_first = true;
@@ -130,6 +129,14 @@ public:
                     prev_y = y;
                     is_first = false;
                 }
+            }
+            for (auto _circle : debug_draw.value("Circles").toArray()) {
+                auto circle = _circle.toObject();
+                double x = circle.value("X").toDouble();
+                double y = circle.value("Y").toDouble();
+                double r = circle.value("R").toDouble();
+                painter.setBrush(Qt::red);
+                painter.drawEllipse(QPointF(x, y), r, r);
             }
         }
         if (!debug_message.isNull()) {
