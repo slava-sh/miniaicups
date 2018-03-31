@@ -128,14 +128,14 @@ public:
                 double prev_x;
                 double prev_y;
                 bool is_first = true;
-                auto color = line.value("C").toString();
+                auto color = line.value("C").toString("black");
                 for (auto _point : line.value("P").toArray()) {
                     auto point = _point.toObject();
                     auto x = point.value("X").toDouble();
                     auto y = point.value("Y").toDouble();
                     if (!is_first) {
                         painter.setPen(QPen(QBrush(QColor(color)), 1));
-                        painter.drawLine(prev_x, prev_y, x, y);
+                        painter.drawLine(QPointF(prev_x, prev_y), QPointF(x, y));
                     }
                     prev_x = x;
                     prev_y = y;
