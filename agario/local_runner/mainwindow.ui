@@ -186,6 +186,34 @@
        </layout>
       </item>
       <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="btn_svg">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>SVG</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <widget class="Line" name="line">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -332,6 +360,7 @@
   <tabstop>btn_stop</tabstop>
   <tabstop>btn_newSeed</tabstop>
   <tabstop>btn_step</tabstop>
+  <tabstop>btn_svg</tabstop>
   <tabstop>cbx_speed</tabstop>
   <tabstop>cbx_forces</tabstop>
   <tabstop>cbx_fog</tabstop>

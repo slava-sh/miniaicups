@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QMessageBox>
+#include <QSvgGenerator>
 
 #include "constants.h"
 #include "strategymodal.h"
@@ -64,6 +65,7 @@ public:
         connect(ui->btn_start_pause, SIGNAL(pressed()), this, SLOT(init_game()));
         connect(ui->btn_stop, SIGNAL(pressed()), this, SLOT(clear_game()));
         connect(ui->btn_step, SIGNAL(pressed()), this, SLOT(pause_and_step_game()));
+        connect(ui->btn_svg, SIGNAL(pressed()), this, SLOT(save_svg()));
 
         connect(ui->cbx_forces, SIGNAL(stateChanged(int)), this, SLOT(update()));
         connect(ui->cbx_speed, SIGNAL(stateChanged(int)), this, SLOT(update()));
@@ -80,8 +82,6 @@ public:
         if (mechanic) delete mechanic;
         if (sm) delete sm;
     }
-
-
 
 public slots:
     void init_game() {
@@ -182,19 +182,6 @@ public slots:
         step_game();
     }
 
-    void step_game() {
-        int tick = mechanic->tickEvent();
-        ui->txt_ticks->setText(QString::number(tick));
-        this->update();
-
-        if (tick % Constants::instance().BASE_TICK == 0 && tick != 0) {
-            update_score();
-        }
-        if (tick % Constants::instance().GAME_TICKS == 0 && tick != 0) {
-            finish_game();
-        }
-    }
-
     void finish_game() {
         killTimer(timerId);
         is_paused = false;
@@ -212,19 +199,47 @@ public slots:
         }
     }
 
+    void save_svg() {
+        QSvgGenerator generator;
+        generator.setFileName("/tmp/game.svg");
+        generator.setSize(QSize(
+                    Constants::instance().GAME_WIDTH,
+                    Constants::instance().GAME_HEIGHT));
+        generator.setTitle("TITLE");
+        generator.setDescription("DEEEEE");
+        QPainter painter;
+        painter.begin(&generator);
+        paint_on(painter);
+        painter.end();
+    }
+
 public:
+    void step_game() {
+        int tick = mechanic->tickEvent();
+        ui->txt_ticks->setText(QString::number(tick));
+        this->update();
+
+        if (tick % Constants::instance().BASE_TICK == 0 && tick != 0) {
+            update_score();
+        }
+        if (tick % Constants::instance().GAME_TICKS == 0 && tick != 0) {
+            finish_game();
+        }
+    }
+
     void paintEvent(QPaintEvent*) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
-
         painter.translate(ui->viewport->x(), ui->viewport->y());
         painter.fillRect(ui->viewport->rect(), QBrush(Qt::white));
         painter.setClipRect(ui->viewport->rect());
+        paint_on(painter);
+    }
 
+    void paint_on(QPainter& painter) {
         bool show_speed = ui->cbx_speed->isChecked();
         bool show_cmd = ui->cbx_forces->isChecked();
         bool show_fogs = ui->cbx_fog->isChecked();
-
         mechanic->paintEvent(painter, show_speed, show_fogs, show_cmd, player_vision);
     }
 
