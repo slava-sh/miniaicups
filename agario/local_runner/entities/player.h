@@ -151,7 +151,13 @@ public:
         }
         if (!debug_message.isNull()) {
             painter.setPen(QPen(QBrush(Qt::black), 1));
-            painter.drawText(ix, iy - radius - 3, debug_message);
+            double x = 15;
+            double y = 15;
+            double dy = y;
+            for (auto message : debug_message.split("; ")) {
+                painter.drawText(x, y, message);
+                y += dy;
+            }
         }
     }
 
