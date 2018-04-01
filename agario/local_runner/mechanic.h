@@ -156,10 +156,10 @@ public:
         }
     }
 
-    int tickEvent() {
+    int tickEvent(bool& is_paused) {
         auto oldScores = player_scores;
 #ifdef LOCAL_RUNNER
-        apply_strategies();
+        apply_strategies(is_paused);
 #endif
         tick++;
         move_moveables();
@@ -420,7 +420,7 @@ public:
     }
 
 public:
-    void apply_strategies() {
+    void apply_strategies(bool& is_paused) {
         for (Strategy *strategy : strategy_array) {
             int sId = strategy->getId();
             PlayerArray fragments = get_players_by_id(sId);
@@ -430,6 +430,9 @@ public:
             CircleArray visibles = get_visibles(fragments);
 
             Direct direct = strategy->tickEvent(fragments, visibles);
+            if (direct.pause) {
+                is_paused = true;
+            }
 //            logger->write_direct(tick, sId, direct);
 
             apply_direct_for(sId, direct);

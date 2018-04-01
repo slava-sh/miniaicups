@@ -111,6 +111,10 @@ public:
             my_player->debug_draw = json.value("Draw").toObject();
         }
 
+        if (json.value("Pause").toBool(false)) {
+            result.pause = true;
+        }
+
         return result;
     }
 

@@ -214,7 +214,7 @@ public slots:
 
 public:
     void step_game() {
-        int tick = mechanic->tickEvent();
+        int tick = mechanic->tickEvent(is_paused);
         ui->txt_ticks->setText(QString::number(tick));
         this->update();
 

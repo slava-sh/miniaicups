@@ -11,12 +11,13 @@
 
 struct Direct
 {
-    explicit Direct(double _x, double _y) : x(_x), y(_y), split(false), eject(false) {}
+    explicit Direct(double _x, double _y) : x(_x), y(_y), split(false), eject(false), pause(false) {}
 
 public:
     double x, y;
     bool split;
     bool eject;
+    bool pause;
 
     void limit() {
 
