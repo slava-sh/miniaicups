@@ -151,7 +151,7 @@ public:
         }
         if (!debug_message.isNull()) {
             painter.setPen(QPen(QBrush(Qt::black), 1));
-            double x = 15;
+            double x = 10;
             double y = 15;
             double dy = y;
             for (auto message : debug_message.split("; ")) {
