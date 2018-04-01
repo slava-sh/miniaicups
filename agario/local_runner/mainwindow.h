@@ -262,7 +262,11 @@ public:
     }
 
     void keyPressEvent(QKeyEvent *event) {
-        mechanic->keyPressEvent(event);
+        if (event->key() == Qt::Key_Space) {
+            pause_and_step_game();
+        } else {
+            mechanic->keyPressEvent(event);
+        }
     }
 
     void update_score() {
