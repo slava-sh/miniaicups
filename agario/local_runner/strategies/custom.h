@@ -103,7 +103,8 @@ public:
         for (auto player : fragments) {
             if (player->getId() == id) {
                 my_player = player;
-                break;
+                my_player->debug_message.clear();
+                my_player->debug_draw = QJsonObject();
             }
         }
         if (my_player != nullptr) {
