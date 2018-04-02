@@ -46,7 +46,7 @@ public:
         if (key == Qt::Key_W) {
             eject = true;
         }
-        if (key == Qt::Key_Space) {
+        if (key == Qt::Key_A) {
             split = true;
         }
     }
