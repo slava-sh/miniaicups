@@ -187,7 +187,7 @@
             </font>
            </property>
            <property name="text">
-            <string>/Users/slava/Desktop/agarcup/run.sh</string>
+            <string>/usr/bin/false</string>
            </property>
           </widget>
          </item>
@@ -343,7 +343,7 @@
             </font>
            </property>
            <property name="text">
-            <string>/Users/slava/Desktop/agarcup/run.sh</string>
+            <string>/usr/bin/false</string>
            </property>
           </widget>
          </item>
@@ -503,7 +503,7 @@
             </font>
            </property>
            <property name="text">
-            <string>/Users/slava/Desktop/agarcup/run.sh</string>
+            <string>/usr/bin/false</string>
            </property>
           </widget>
          </item>
@@ -659,7 +659,7 @@
             </font>
            </property>
            <property name="text">
-            <string>/Users/slava/Desktop/agarcup/run.sh</string>
+            <string>/usr/bin/false</string>
            </property>
           </widget>
          </item>
