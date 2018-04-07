@@ -62,7 +62,7 @@ public:
         ui->tableWidget->verticalHeader()->hide();
 
         ui->txt_ticks->setText("0");
-        connect(ui->btn_start_pause, SIGNAL(pressed()), this, SLOT(init_game()));
+        connect(ui->btn_start_pause, SIGNAL(pressed()), this, SLOT(start_or_pause_game()));
         connect(ui->btn_stop, SIGNAL(pressed()), this, SLOT(clear_game()));
         connect(ui->btn_step, SIGNAL(pressed()), this, SLOT(pause_and_step_game()));
         connect(ui->btn_svg, SIGNAL(pressed()), this, SLOT(save_svg()));
@@ -73,8 +73,7 @@ public:
 
         connect(ui->btn_strategies_settings, &QPushButton::clicked, sm, &QDialog::show);
 
-        ui->btn_newSeed->setVisible(false);
-        ui->btn_start->animateClick();
+        ui->btn_start_pause->animateClick();
     }
 
     ~MainWindow() {
@@ -84,15 +83,14 @@ public:
     }
 
 public slots:
-    void init_game() {
+    void start_or_pause_game() {
         if (timerId > 0) {
-            pause_game();
+            is_paused = !is_paused;
             return;
         }
         timerId = startTimer(Constants::instance().TICK_MS);
 
         std::string seed = ui->txt_seed->text().toStdString();
-        ui->btn_start_pause->setText("Пауза");
 
         ui->tableWidget->setSortingEnabled(false);
         ui->tableWidget->setRowCount(0);
@@ -146,7 +144,6 @@ public slots:
 
     void on_error(QString msg) {
         is_paused = true;
-
         mbox->setStandardButtons(QMessageBox::Close);
         mbox->setText(msg);
         mbox->exec();
@@ -171,14 +168,8 @@ public slots:
         this->update();
     }
 
-    void pause_game() {
-        is_paused = !is_paused;
-        if (is_paused) ui->btn_start_pause->setText("Продолжить");
-        else ui->btn_start_pause->setText("Пауза");
-    }
-
     void pause_and_step_game() {
-        init_game();
+        start_or_pause_game();
         is_paused = true;
         step_game();
     }
@@ -243,7 +234,13 @@ public:
     }
 
     void timerEvent(QTimerEvent *event) {
-        if (event->timerId() == timerId && !is_paused) {
+        if (event->timerId() != timerId) {
+            return;
+        }
+        if (is_paused) {
+            ui->btn_start_pause->setText("Старт");
+        } else {
+            ui->btn_start_pause->setText("Пауза");
             step_game();
         }
     }
