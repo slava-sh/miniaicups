@@ -43,10 +43,10 @@ public:
 
     void set_key(QKeyEvent *event) {
         int key = event->key();
-        if (key == Qt::Key_W) {
+        if (key == Qt::Key_E) {
             eject = true;
         }
-        if (key == Qt::Key_A) {
+        if (key == Qt::Key_S) {
             split = true;
         }
     }
