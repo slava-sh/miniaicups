@@ -195,7 +195,8 @@ public slots:
 
     void next_tick() {
         wait_timeout = 0;
-        int tick = mechanic->tickEvent();
+        bool is_paused = false;
+        int tick = mechanic->tickEvent(is_paused);
         if (tick % 100 == 0) {
             qDebug() << "tick" << tick << QDateTime::currentDateTime().toString("hh:mm:ss");
         }
