@@ -59,11 +59,11 @@ public:
     }
 
     void bind(const QString &host, int port) {
+        qDebug().nospace().noquote() << "waiting for clients on " << host << ":" << port;
         bool result = server->listen(QHostAddress(host), port);
         if (! result) {
             qDebug() << "Already bound to that port. listen() failed";
         }
-        qDebug() << "waiting for clients";
         wait_timeout = 0;
     }
 
@@ -259,7 +259,7 @@ public slots:
         QJsonDocument jsonDoc(jsonResult);
         QString result = QString(jsonDoc.toJson(QJsonDocument::Compact));
 
-        QFile file(LOG_DIR + SCORES_FILE);
+        QFile file(Constants::instance().LOG_DIR + SCORES_FILE);
         if (file.open(QIODevice::WriteOnly|QFile::Truncate)) {
             QTextStream f_Stream(&file);
             f_Stream << result;
@@ -270,7 +270,7 @@ public slots:
     void write_result() {
         QJsonObject jsonScores;
         jsonScores.insert("filename", QJsonValue(SCORES_FILE));
-        jsonScores.insert("location", QJsonValue(LOG_DIR + SCORES_FILE));
+        jsonScores.insert("location", QJsonValue(Constants::instance().LOG_DIR + SCORES_FILE));
         jsonScores.insert("is_private", QJsonValue(false));
 
         QJsonArray jsonDebugAll;

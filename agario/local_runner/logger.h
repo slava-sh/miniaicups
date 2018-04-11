@@ -85,7 +85,7 @@ public:
     void init_file(QString part, QString basename, bool debug=true) {
 //        QString f = (!debug)? LOG_FILE : DEBUG_FILE;
         file_name = basename.replace("{1}", part);
-        QString path = LOG_DIR + file_name;
+        QString path = Constants::instance().LOG_DIR + file_name;
         file.setFileName(path);
         clear_file();
         if (! debug) {

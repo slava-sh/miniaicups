@@ -27,6 +27,7 @@ private:
 public:
     // name                     // default
 
+    QString LOG_DIR;            // /var/tmp/
     int GAME_TICKS;             // 75000 ticks
     int GAME_WIDTH;             // 660
     int GAME_HEIGHT;            // 660
@@ -71,10 +72,15 @@ public:
         DEFINE_QSETTINGS(settings);
         settings.beginGroup("constants");
 
+#define SET_STRING_CONSTANT(NAME, DEFAULT) do {                                \
+            c.NAME = getSettingValue(#NAME, env, settings, DEFAULT);           \
+        } while(false)
+
 #define SET_CONSTANT(NAME, DEFAULT, CONVERT) do {                              \
             c.NAME = getSettingValue(#NAME, env, settings, DEFAULT).CONVERT(); \
         } while(false)
 
+        SET_STRING_CONSTANT(LOG_DIR, "/var/tmp/");
         SET_CONSTANT(GAME_TICKS, "75000", toInt);
 #if defined LOCAL_RUNNER
 
@@ -140,7 +146,6 @@ private:
     }
 };
 
-const QString LOG_DIR = "/var/tmp/";
 const QString LOG_FILE = "visio_{1}.log";
 const QString DEBUG_FILE = "{1}.log";
 const QString DUMP_FILE = "{1}_dump.log";
@@ -210,7 +215,7 @@ const int SCORE_FOR_LAST = 100;
 const int SCORE_FOR_BURST = 2;
 
 // TCP Server
-const QString HOST = "0.0.0.0";
+const QString HOST = "127.0.0.1";
 const int PORT = 8000;
 
 const int MAX_RESP_LEN = 3000;
@@ -220,7 +225,7 @@ const int MAX_ID_LEN = 100;
 const int CONNECT_TIMEOUT = 200; // seconds
 //const int RESP_TIMEOUT = 5; // seconds
 //const int SUM_RESP_TIMEOUT = 150; // seconds
-const int PRE_PAUSE = 20; // seconds
+const int PRE_PAUSE = 0; // seconds
 
 const QString CONNECT_EXPIRED = "Ожидание соединения превышено!";
 const QString RESP_EXPIRED = "Ожидание ответа превышено!";
