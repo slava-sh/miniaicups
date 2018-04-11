@@ -1,15 +1,12 @@
 #!/bin/bash -ex
 
-PROJECT="${1:-local_runner}"
-
-case "$PROJECT" in
-server_runner)
-  TARGET=server_runner
-  ;;
-*)
-  TARGET=local_runner.app
-  ;;
-esac
+if [[ "$1" == "server_runner" ]]; then
+  PROJECT="server_runner"
+  TARGET="server_runner"
+else
+  PROJECT="local_runner"
+  TARGET="local_runner.app"
+fi
 
 /usr/local/opt/qt/bin/qmake "$PROJECT.pro"
 make
