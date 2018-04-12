@@ -81,7 +81,6 @@ public:
         } while(false)
 
         SET_STRING_CONSTANT(LOG_DIR, "/var/tmp/");
-        SET_STRING_CONSTANT(SEED, generate_seed());
         SET_CONSTANT(GAME_TICKS, "75000", toInt);
 #if defined LOCAL_RUNNER
 
@@ -107,6 +106,11 @@ public:
         SET_CONSTANT(RESP_TIMEOUT, "5", toInt);
 
 #undef SET_CONSTANT
+
+        c.SEED = env.value("SEED", "");
+        if (c.SEED.isEmpty()) {
+            c.SEED = generate_seed();
+        }
 
         settings.endGroup();
         settings.sync();
