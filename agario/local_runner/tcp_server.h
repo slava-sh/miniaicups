@@ -144,12 +144,12 @@ public slots:
     }
 
     void start_game() {
-        //qDebug() << "starting game" << QDateTime::currentDateTime().toString();
         game_active = true;
         wait_timeout = 0;
 
-        std::string seed = Constants::instance().SEED;
-        mechanic->init_objects(seed, [] (Player*) -> Strategy* {
+        auto seed = Constants::instance().SEED;
+        qDebug().noquote() << "starting game" << seed;
+        mechanic->init_objects(seed.toStdString(), [] (Player*) -> Strategy* {
             return NULL;
         });
 

@@ -36,7 +36,7 @@ public:
 
     int TICK_MS;                // 16 ms
     int BASE_TICK;              // every 50 ticks
-    std::string SEED;           // from std::random_device
+    QString SEED;               // from std::random_device
 
     double INERTION_FACTOR;     // 10.0
     double VISCOSITY;           // 0.25
@@ -53,12 +53,12 @@ public:
         return ins;
     }
 
-    static std::string generate_seed(uint length = 10) {
+    static QString generate_seed(uint length = 10) {
         std::random_device dev;
-        const std::string alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
+        const QString alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
         std::uniform_int_distribution<> dist(0, static_cast<int>(alphabet.length() - 1));
 
-        std::string seed;
+        QString seed;
         while (seed.length() < length) {
             seed += alphabet[static_cast<uint>(dist(dev))];
         }
@@ -81,6 +81,7 @@ public:
         } while(false)
 
         SET_STRING_CONSTANT(LOG_DIR, "/var/tmp/");
+        SET_STRING_CONSTANT(SEED, generate_seed());
         SET_CONSTANT(GAME_TICKS, "75000", toInt);
 #if defined LOCAL_RUNNER
 
@@ -109,8 +110,6 @@ public:
 
         settings.endGroup();
         settings.sync();
-
-        c.SEED = env.value("SEED", "").toStdString();
 
         return c;
     }
