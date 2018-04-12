@@ -223,6 +223,8 @@ public:
         painter.translate(ui->viewport->x(), ui->viewport->y());
         painter.fillRect(ui->viewport->rect(), QBrush(Qt::white));
         painter.setClipRect(ui->viewport->rect());
+        painter.scale((qreal) ui->viewport->width() / Constants::instance().GAME_WIDTH,
+                      (qreal) ui->viewport->height() / Constants::instance().GAME_HEIGHT);
         paint_on(painter);
     }
 
