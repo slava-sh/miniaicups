@@ -76,6 +76,11 @@ public:
         return solution_id;
     }
 
+    QString describe() const {
+        return QString("player %1 (solution %2)").arg(
+                QString::number(player_id), solution_id);
+    }
+
     void timerEvent(QTimerEvent *event) {
 
         if (event->timerId() == timerId && waiting && is_active) {

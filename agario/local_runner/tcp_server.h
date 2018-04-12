@@ -99,7 +99,7 @@ public slots:
 
     void client_disconnected() {
         ClientWrapper *client = static_cast<ClientWrapper*>(sender());
-        qDebug() << "client disconnected" << client->getId();
+        qDebug().noquote() << "client disconnected" << client->describe();
 
         if (get_active_count() == 0 && game_active) {
             cancel_game();
@@ -136,7 +136,8 @@ public slots:
         ClientWrapper *client = static_cast<ClientWrapper*>(sender());
         client->set_player(ready_player_id);
 
-        qDebug() << "client ready" << client->getId();
+        qDebug().noquote() << "client ready" << client->describe();
+
         ready_player_id++;
         if (get_ready_clients_count() == client_cnt) {
             start_game();
