@@ -45,10 +45,10 @@ public:
         this->setMouseTracking(true);
         this->setFixedSize(this->geometry().width(), this->geometry().height());
 
-        if (Constants::instance().SEED.empty()) {
-            ui->txt_seed->setText(QString::fromStdString(Constants::generate_seed()));
+        if (Constants::instance().SEED.isEmpty()) {
+            ui->txt_seed->setText(Constants::generate_seed());
         } else {
-            ui->txt_seed->setText(QString::fromStdString(Constants::instance().SEED));
+            ui->txt_seed->setText(Constants::instance().SEED);
         }
 
         ui->tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
