@@ -1,12 +1,22 @@
 #!/bin/bash -ex
 
-if [[ "$1" == "server_runner" ]]; then
+case "$1" in
+all)
+  "$0" server_runner
+  make distclean
+  "$0" local_runner
+  make distclean
+  exit
+  ;;
+server_runner)
   PROJECT="server_runner"
   TARGET="server_runner"
-else
+  ;;
+*)
   PROJECT="local_runner"
   TARGET="local_runner.app"
-fi
+  ;;
+esac
 
 /usr/local/opt/qt/bin/qmake "$PROJECT.pro"
 make
