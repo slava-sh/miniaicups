@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <QTcpServer>
 #include <QTime>
+#include <iostream>
 
 
 class TcpServer : public QObject
@@ -143,7 +144,7 @@ public slots:
     }
 
     void start_game() {
-        qDebug() << "starting game" << QDateTime::currentDateTime().toString();
+        //qDebug() << "starting game" << QDateTime::currentDateTime().toString();
         game_active = true;
         wait_timeout = 0;
 
@@ -159,8 +160,8 @@ public slots:
         }
         broadcast_config();
 
-        qDebug() << "sleeping" << PRE_PAUSE << "seconds";
-        sleep(PRE_PAUSE);
+        //qDebug() << "sleeping" << PRE_PAUSE << "seconds";
+        //sleep(PRE_PAUSE);
         broadcast_state();
     }
 
@@ -198,7 +199,7 @@ public slots:
         bool is_paused = false;
         int tick = mechanic->tickEvent(is_paused);
         if (tick % 100 == 0) {
-            qDebug() << "tick" << tick << QDateTime::currentDateTime().toString("hh:mm:ss");
+            std::cerr << "tick " << tick << "\r";
         }
         current_tick = tick;
         if (tick < Constants::instance().GAME_TICKS && !mechanic->known()) {
