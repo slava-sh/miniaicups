@@ -86,7 +86,7 @@ public slots:
         QTcpSocket *client_socket = server->nextPendingConnection();
         ClientWrapper *client = new ClientWrapper(client_socket);
         clients.append(client);
-        qDebug() << "client connected";
+        //qDebug() << "client connected";
 
         connect(client, SIGNAL(disconnected()), this, SLOT(client_disconnected()));
         connect(client, SIGNAL(ready()), this, SLOT(client_ready()));
@@ -136,7 +136,7 @@ public slots:
         ClientWrapper *client = static_cast<ClientWrapper*>(sender());
         client->set_player(ready_player_id);
 
-        qDebug().noquote() << "client ready" << client->describe();
+        //qDebug().noquote() << "client ready" << client->describe();
 
         ready_player_id++;
         if (get_ready_clients_count() == client_cnt) {
@@ -236,7 +236,7 @@ public slots:
 
         write_scores();
         write_result();
-        qDebug() << "Successfully written";
+        //qDebug() << "Successfully written";
         emit game_finished();
     }
 
