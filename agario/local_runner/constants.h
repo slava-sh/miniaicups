@@ -67,53 +67,46 @@ public:
     }
 
     static Constants &initialize(const QProcessEnvironment &env) {
+        srand(time(NULL));
         Constants& c = instance();
 
-        DEFINE_QSETTINGS(settings);
-        settings.beginGroup("constants");
-
 #define SET_STRING_CONSTANT(NAME, DEFAULT) do {                                \
-            c.NAME = getSettingValue(#NAME, env, settings, DEFAULT);           \
+            c.NAME = env.value(#NAME, DEFAULT);                                \
         } while(false)
 
 #define SET_CONSTANT(NAME, DEFAULT, CONVERT) do {                              \
-            c.NAME = getSettingValue(#NAME, env, settings, DEFAULT).CONVERT(); \
+            c.NAME = env.value(#NAME, QString::number(DEFAULT)).CONVERT();     \
         } while(false)
 
         SET_STRING_CONSTANT(LOG_DIR, "/var/tmp/");
-        SET_CONSTANT(GAME_TICKS, "75000", toInt);
+        SET_CONSTANT(GAME_TICKS, 75000, toInt);
+        SET_CONSTANT(TICK_MS, 16, toInt);
+        SET_CONSTANT(BASE_TICK, 50, toInt);
+        SET_CONSTANT(RESP_TIMEOUT, 5, toInt);
 #if defined LOCAL_RUNNER
-
-        SET_CONSTANT(GAME_WIDTH, "660", toInt);
-        SET_CONSTANT(GAME_HEIGHT, "660", toInt);
-        SET_CONSTANT(SUM_RESP_TIMEOUT, "500", toInt);
+        SET_CONSTANT(GAME_WIDTH, 660, toInt);
+        SET_CONSTANT(GAME_HEIGHT, 660, toInt);
+        SET_CONSTANT(SUM_RESP_TIMEOUT, 500, toInt);
 #elif defined SERVER_RUNNER
-        SET_CONSTANT(GAME_WIDTH, "990", toInt);
-        SET_CONSTANT(GAME_HEIGHT, "990", toInt);
-        SET_CONSTANT(SUM_RESP_TIMEOUT, "150", toInt);
+        SET_CONSTANT(GAME_WIDTH, 990, toInt);
+        SET_CONSTANT(GAME_HEIGHT, 990, toInt);
+        SET_CONSTANT(SUM_RESP_TIMEOUT, 150, toInt);
 #endif
-
-        SET_CONSTANT(TICK_MS, "16", toInt);
-        SET_CONSTANT(BASE_TICK, "50", toInt);
-        SET_CONSTANT(INERTION_FACTOR, "10.0", toDouble);
-        SET_CONSTANT(VISCOSITY, "0.25", toDouble);
-        SET_CONSTANT(SPEED_FACTOR, "25.0", toDouble);
-        SET_CONSTANT(FOOD_MASS, "1.0", toDouble);
-        SET_CONSTANT(VIRUS_RADIUS, "22.0", toDouble);
-        SET_CONSTANT(VIRUS_SPLIT_MASS, "80.0", toDouble);
-        SET_CONSTANT(MAX_FRAGS_CNT, "10", toInt);
-        SET_CONSTANT(TICKS_TIL_FUSION, "250", toInt);
-        SET_CONSTANT(RESP_TIMEOUT, "5", toInt);
-
+        SET_CONSTANT(INERTION_FACTOR, random_double(1.0, 20.0), toDouble);
+        SET_CONSTANT(VISCOSITY, random_double(0.05, 0.5), toDouble);
+        SET_CONSTANT(SPEED_FACTOR, random_double(25.0, 100.0), toDouble);
+        SET_CONSTANT(FOOD_MASS, random_double(1.0, 4.0), toDouble);
+        SET_CONSTANT(VIRUS_RADIUS, random_double(15.0, 40.0), toDouble);
+        SET_CONSTANT(VIRUS_SPLIT_MASS, random_double(50.0, 100.0), toDouble);
+        SET_CONSTANT(MAX_FRAGS_CNT, random_int(4, 16), toInt);
+        SET_CONSTANT(TICKS_TIL_FUSION, random_int(150, 500), toInt);
+#undef SET_STRING_CONSTANT
 #undef SET_CONSTANT
 
         c.SEED = env.value("SEED", "");
         if (c.SEED.isEmpty()) {
             c.SEED = generate_seed();
         }
-
-        settings.endGroup();
-        settings.sync();
 
         return c;
     }
@@ -137,15 +130,12 @@ public:
     }
 
 private:
-    static QString getSettingValue(const QString& name,
-                                   const QProcessEnvironment& env,
-                                   QSettings& section,
-                                   const QString& defaultValue)
-    {
-        if (!section.contains(name)) {
-            section.setValue(name, defaultValue);
-        }
-        return env.value(name, section.value(name).toString());
+    static double random_double(double lo, double hi) {
+      return lo + (hi - lo) * (double) rand() / (double) RAND_MAX;
+    }
+
+    static int random_int(int lo, int hi) {  // NOTE: Not equally likely.
+      return lo + (hi - lo) * rand() / (hi - lo + 1);
     }
 };
 
