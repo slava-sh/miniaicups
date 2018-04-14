@@ -135,7 +135,7 @@ private:
     }
 
     static int random_int(int lo, int hi) {  // NOTE: Not equally likely.
-      return lo + (hi - lo) * rand() / (hi - lo + 1);
+      return lo + rand() % (hi - lo + 1);
     }
 };
 
