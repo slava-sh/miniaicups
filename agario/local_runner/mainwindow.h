@@ -249,14 +249,12 @@ public:
 
 public:
     void mouseMoveEvent(QMouseEvent *event) {
-        int x = event->x() - ui->viewport->x();
-        int y = event->y() - ui->viewport->y();
-        mechanic->mouseMoveEvent(x, y);
+        mousePressEvent(event);
     }
 
     void mousePressEvent(QMouseEvent *event) {
-        int x = event->x() - ui->viewport->x();
-        int y = event->y() - ui->viewport->y();
+        int x = (event->x() - ui->viewport->x()) / ((qreal) ui->viewport->width() / Constants::instance().GAME_WIDTH);
+        int y = (event->y() - ui->viewport->y()) / ((qreal) ui->viewport->height() / Constants::instance().GAME_HEIGHT);
         mechanic->mouseMoveEvent(x, y);
     }
 
