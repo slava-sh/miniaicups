@@ -37,13 +37,12 @@ public:
 
 class Circle
 {
-protected:
+public:
     int id;
     double x, y;
     double radius;
     double mass;
 
-public:
     explicit Circle(int _id, double _x, double _y, double _radius, double _mass) :
         id(_id),
         x(_x),

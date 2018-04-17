@@ -83,13 +83,11 @@ public:
         SET_CONSTANT(TICK_MS, 16, toInt);
         SET_CONSTANT(BASE_TICK, 50, toInt);
         SET_CONSTANT(RESP_TIMEOUT, 5, toInt);
-#if defined LOCAL_RUNNER
-        SET_CONSTANT(GAME_WIDTH, 660, toInt);
-        SET_CONSTANT(GAME_HEIGHT, 660, toInt);
-        SET_CONSTANT(SUM_RESP_TIMEOUT, 500, toInt);
-#elif defined SERVER_RUNNER
         SET_CONSTANT(GAME_WIDTH, 990, toInt);
         SET_CONSTANT(GAME_HEIGHT, 990, toInt);
+#if defined LOCAL_RUNNER
+        SET_CONSTANT(SUM_RESP_TIMEOUT, 500, toInt);
+#elif defined SERVER_RUNNER
         SET_CONSTANT(SUM_RESP_TIMEOUT, 150, toInt);
 #endif
         SET_CONSTANT(INERTION_FACTOR, random_double(1.0, 20.0), toDouble);

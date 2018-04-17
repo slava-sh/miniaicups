@@ -2,6 +2,7 @@
 #define STARTEGY_H
 
 #include "../entities/player.h"
+#include "../replay_log.h"
 
 
 class Strategy : public QObject

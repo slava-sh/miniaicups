@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
 
 private:
     Ui::MainWindow *ui;
-    Mechanic *mechanic;
+    Mechanic *mechanic = nullptr;
     StrategyModal *sm;
     QMessageBox *mbox;
 
@@ -73,7 +73,7 @@ public:
 
         connect(ui->btn_strategies_settings, &QPushButton::clicked, sm, &QDialog::show);
 
-        ui->btn_start_pause->animateClick();
+        //ui->btn_start_pause->animateClick();
     }
 
     ~MainWindow() {
@@ -90,12 +90,23 @@ public slots:
         }
         timerId = startTimer(Constants::instance().TICK_MS);
 
+        QSharedPointer<ReplayLog> replay_log = nullptr;
+        auto replay_log_txt = ui->txt_replay_log->text().trimmed();
+        if (!replay_log_txt.isEmpty()) {
+            replay_log = QSharedPointer<ReplayLog>(new ReplayLog(replay_log_txt));
+            Constants::initialize(replay_log->env());
+        }
+
         std::string seed = ui->txt_seed->text().toStdString();
 
         ui->tableWidget->setSortingEnabled(false);
         ui->tableWidget->setRowCount(0);
 
-        mechanic->init_objects(seed, [this] (Player *player) {
+        mechanic = new Mechanic();
+        if (replay_log != nullptr) {
+            mechanic->set_replay_log(replay_log);
+        }
+        mechanic->init_objects(seed, [this, replay_log] (Player *player) {
             int pId = player->getId();
             player->set_color(sm->get_color(pId));
 

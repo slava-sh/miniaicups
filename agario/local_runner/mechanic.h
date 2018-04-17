@@ -28,6 +28,7 @@ private:
     int tick;
     int id_counter;
     Logger *logger;
+    QSharedPointer<ReplayLog> replay_log = nullptr;
 
     FoodArray food_array;
     EjectionArray eject_array;
@@ -68,6 +69,10 @@ public:
         add_virus(START_VIRUS_SETS);
 
         write_base_tick();
+    }
+
+    void set_replay_log(QSharedPointer<ReplayLog> replay_log) {
+        this->replay_log = replay_log;
     }
 
     void clear_objects(bool with_log=true) {
@@ -159,7 +164,7 @@ public:
     int tickEvent(bool& is_paused) {
         auto oldScores = player_scores;
 #ifdef LOCAL_RUNNER
-        apply_strategies(is_paused);
+        apply_strategies(tick, is_paused);
 #endif
         tick++;
         move_moveables();
@@ -275,21 +280,27 @@ public:
     }
 
 public:
-    void add_circular(int sets_cnt, double one_radius, const AddFunc &add_one) {
-        double center_x = Constants::instance().GAME_WIDTH / 2, center_y = Constants::instance().GAME_HEIGHT / 2;
-        for (int I = 0; I < sets_cnt; I++) {
-            double _x = rand() % qCeil(center_x - 4 * one_radius) + 2 * one_radius;
-            double _y = rand() % qCeil(center_y - 4 * one_radius) + 2 * one_radius;
-
-            add_one(_x, _y);
-            add_one(center_x + (center_x - _x), _y);
-            add_one(center_x + (center_x - _x), center_y + (center_y - _y));
-            add_one(_x, center_y + (center_y - _y));
+    void add_circular(QString type, int sets_cnt, double one_radius, const AddFunc &add_one) {
+        if (replay_log != nullptr) {
+            for (int I = 0; I < sets_cnt * 4; I++) {
+                auto point = replay_log->get_point(tick, type);
+                add_one(point.first, point.second);
+            }
+        } else {
+            double center_x = Constants::instance().GAME_WIDTH / 2, center_y = Constants::instance().GAME_HEIGHT / 2;
+            for (int I = 0; I < sets_cnt; I++) {
+                double _x = rand() % qCeil(center_x - 4 * one_radius) + 2 * one_radius;
+                double _y = rand() % qCeil(center_y - 4 * one_radius) + 2 * one_radius;
+                add_one(_x, _y);
+                add_one(center_x + (center_x - _x), _y);
+                add_one(center_x + (center_x - _x), center_y + (center_y - _y));
+                add_one(_x, center_y + (center_y - _y));
+            }
         }
     }
 
     void add_food(int sets_cnt) {
-        add_circular(sets_cnt, FOOD_RADIUS, [=] (double _x, double _y) {
+        add_circular("AF", sets_cnt, FOOD_RADIUS, [=] (double _x, double _y) {
             Food *new_food = new Food(id_counter, _x, _y, FOOD_RADIUS, Constants::instance().FOOD_MASS);
             food_array.append(new_food);
             id_counter++;
@@ -301,7 +312,7 @@ public:
 
     void add_virus(int sets_cnt) {
         double rad = Constants::instance().VIRUS_RADIUS;
-        add_circular(sets_cnt, rad, [=] (double _x, double _y) {
+        add_circular("AV", sets_cnt, rad, [=] (double _x, double _y) {
             if (! is_space_empty(_x, _y, rad)) {
                 return;
             }
@@ -316,7 +327,7 @@ public:
 
     void add_player(int sets_cnt, const StrategyGet &get_strategy) {
         bool by_mouse = true;
-        add_circular(sets_cnt, PLAYER_RADIUS, [=, &by_mouse] (double _x, double _y) {
+        add_circular("AP", sets_cnt, PLAYER_RADIUS, [=, &by_mouse] (double _x, double _y) {
             if (! is_space_empty(_x, _y, PLAYER_RADIUS)) {
                 return;
             }
@@ -420,7 +431,7 @@ public:
     }
 
 public:
-    void apply_strategies(bool& is_paused) {
+    void apply_strategies(int tick, bool& is_paused) {
         for (Strategy *strategy : strategy_array) {
             int sId = strategy->getId();
             PlayerArray fragments = get_players_by_id(sId);
@@ -433,7 +444,9 @@ public:
             if (direct.pause) {
                 is_paused = true;
             }
-//            logger->write_direct(tick, sId, direct);
+            if (replay_log != nullptr) {
+                direct = replay_log->get_command(tick, sId);
+            }
 
             apply_direct_for(sId, direct);
         }
@@ -729,6 +742,11 @@ public:
             bool changed = player->move(ins.GAME_WIDTH, ins.GAME_HEIGHT);
             if (changed) {
                 logger->write_change_pos(tick, player);
+            }
+            if (replay_log != nullptr) {
+                auto point = replay_log->get_player_pos(tick, player->id_to_str());
+                player->x = point.first;
+                player->y = point.second;
             }
         }
     }
