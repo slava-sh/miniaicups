@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QPair>
 #include <QQueue>
+#include <memory>
 
 class ReplayLog {
 public:
@@ -58,15 +59,28 @@ public:
     }
 
     Direct get_command(int tick, int player_id) const {
-        return commands_.value(qMakePair(tick, player_id), Direct(0, 0));
+        auto key = qMakePair(tick, player_id);
+        if (!commands_.contains(key)) {
+            qFatal("no key %d %d", tick, player_id);
+        }
+        return commands_.value(key, Direct(0, 0));
     }
 
-    QPair<double, double> get_player_pos(int tick, const QString& id) {
-        return player_pos_[qMakePair(tick, id)];
+    std::unique_ptr<QPair<double, double>> get_player_pos(int tick, const QString& id) {
+        auto key = qMakePair(tick, id);
+        auto it = player_pos_.constFind(key);
+        if (it == player_pos_.constEnd()) {
+            return nullptr;
+        }
+        return std::unique_ptr<QPair<double, double>>(new QPair<double, double>(it->first, it->second));
     }
 
     QPair<double, double> get_point(int tick, const QString& type) {
-        return points_[qMakePair(tick, type)].dequeue();
+        auto key = qMakePair(tick, type);
+        if (!points_.contains(key)) {
+            qFatal("no points %d %s", tick, type.toUtf8().constData());
+        }
+        return points_[key].dequeue();
     }
 
     QProcessEnvironment env() const {

@@ -459,7 +459,6 @@ public:
 
         for (Player *frag : fragments) {
             frag->apply_direct(direct, Constants::instance().GAME_WIDTH, Constants::instance().GAME_HEIGHT);
-
             logger->write_direct_for(tick, frag, direct);
         }
 
@@ -745,8 +744,10 @@ public:
             }
             if (replay_log != nullptr) {
                 auto point = replay_log->get_player_pos(tick, player->id_to_str());
-                player->x = point.first;
-                player->y = point.second;
+                if (point != nullptr) {
+                    player->x = point->first;
+                    player->y = point->second;
+                }
             }
         }
     }
